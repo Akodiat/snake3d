@@ -3,6 +3,9 @@ import * as THREE from 'three';
 
 import {OrbitControls} from "three/addons/controls/OrbitControls.js";
 
+const tempQ1 = new THREE.Quaternion();
+const tempQ2 = new THREE.Quaternion();
+
 class View {
 
     constructor(canvas, snake) {
@@ -22,10 +25,17 @@ class View {
             75, this.canvas.width / this.canvas.height, 0.1, 1000
         );
 
-        this.camera.position.copy(this.snake.positions[0].clone().sub(this.snake.direction));
+        this.camera.position.copy(this.snake.positions[0].clone().sub(this.snake.getForwardDirection()));
+
+        const light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+        this.scene.add( light );
 
         this.ambientLight = new THREE.AmbientLight(0xFFFFFF, 1);
         this.scene.add(this.ambientLight);
+
+        const axesHelper = new THREE.AxesHelper(1);
+        this.scene.add(axesHelper);
+
 
         // Update canvas and renderer when window is resized
         window.onresize = () => {
@@ -37,9 +47,6 @@ class View {
 
         this.snakeView = new SnakeView(this.snake, this.scene);
 
-        this.controls = new OrbitControls(this.camera, this.canvas);
-        this.controls.target.set(0, 0.5, 0);
-
         this.prevStepTime = 0;
 
         this.renderer.setAnimationLoop(time=>this.animate(time));
@@ -50,6 +57,20 @@ class View {
             this.snake.step();
             this.prevStepTime = time;
         }
+
+        this.camera.position.lerp(
+            this.snake.getUpDirection().multiplyScalar(3).add(
+                this.snake.positions[0]
+            ).sub(this.snake.getForwardDirection().multiplyScalar(3)),
+        0.01);
+        this.camera.up.lerp(this.snake.getUpDirection(), 0.1);
+
+        tempQ1.copy(this.camera.quaternion);
+        this.camera.lookAt(this.snake.positions[0]);
+        tempQ2.copy(this.camera.quaternion);
+        this.camera.quaternion.copy(tempQ1);
+        this.camera.quaternion.slerp(tempQ2, 0.1);
+
         this.snakeView.update();
         this.renderer.render(this.scene, this.camera);
     }

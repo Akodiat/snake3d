@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 
 const leftTurn = new THREE.Quaternion().setFromAxisAngle(
-    new THREE.Vector3(0, 1, 0), Math.PI / 2
+    new THREE.Vector3(0, 0, 1), Math.PI / 2
 );
 
 const rightTurn = new THREE.Quaternion().setFromAxisAngle(
-    new THREE.Vector3(0, 1, 0),  - Math.PI / 2
+    new THREE.Vector3(0, 0, 1), - Math.PI / 2
 );
 
 const upTurn = new THREE.Quaternion().setFromAxisAngle(
@@ -13,18 +13,22 @@ const upTurn = new THREE.Quaternion().setFromAxisAngle(
 );
 
 const downTurn = new THREE.Quaternion().setFromAxisAngle(
-    new THREE.Vector3(1, 0, 0),  - Math.PI / 2
+    new THREE.Vector3(1, 0, 0), - Math.PI / 2
 );
+
+const defaultForward = new THREE.Vector3(0, 0, 1);
+const defaultLeft = new THREE.Vector3(1, 0, 0);
+const defaultUp = new THREE.Vector3(0, 1, 0);
 
 class Snake {
     constructor(
         startPosition=new THREE.Vector3(),
-        length=3,
-        direction = new THREE.Vector3(0, 1, 0)
+        length=20,
+        orientation=new THREE.Quaternion()
     ) {
         this.positions = [startPosition];
         this.length = length
-        this.direction = direction;
+        this.orientation = orientation;
     }
 
     step() {
@@ -32,7 +36,7 @@ class Snake {
         const currentPos = this.positions[0];
 
         // Calculate next position
-        const nextPos = currentPos.clone().add(this.direction);
+        const nextPos = currentPos.clone().add(this.getForwardDirection());
 
         // Add nextPos to the front of the list
         this.positions.splice(0, 0, nextPos);
@@ -43,24 +47,40 @@ class Snake {
         }
     }
 
-    turn(quaternion) {
-        this.direction.applyQuaternion(quaternion);
+    getForwardDirection() {
+        return defaultForward.clone().applyQuaternion(this.orientation);
+    }
+
+    getUpDirection() {
+        return defaultUp.clone().applyQuaternion(this.orientation);
+    }
+
+    getLeftDirection() {
+        return defaultLeft.clone().applyQuaternion(this.orientation);
     }
 
     turnLeft() {
-        this.turn(leftTurn);
+        this.orientation.premultiply(new THREE.Quaternion().setFromAxisAngle(
+            this.getUpDirection(), Math.PI / 2
+        ));
     }
 
     turnRight() {
-        this.turn(rightTurn);
+        this.orientation.premultiply(new THREE.Quaternion().setFromAxisAngle(
+            this.getUpDirection(), - Math.PI / 2
+        ));
     }
 
     turnUp() {
-        this.turn(upTurn);
+        this.orientation.premultiply(new THREE.Quaternion().setFromAxisAngle(
+            this.getLeftDirection(), - Math.PI / 2
+        ));
     }
 
     turnDown() {
-        this.turn(downTurn);
+        this.orientation.premultiply(new THREE.Quaternion().setFromAxisAngle(
+            this.getLeftDirection(), Math.PI / 2
+        ));
     }
 }
 
