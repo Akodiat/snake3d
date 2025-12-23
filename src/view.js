@@ -59,14 +59,14 @@ class View {
         }
 
         this.camera.position.lerp(
-            this.snake.getUpDirection().multiplyScalar(3).add(
+            this.snake.getUpDirection().multiplyScalar(5).add(
                 this.snake.positions[0]
-            ).sub(this.snake.getForwardDirection().multiplyScalar(3)),
-        0.01);
+            ).sub(this.snake.getForwardDirection().multiplyScalar(5)),
+        0.05);
         this.camera.up.lerp(this.snake.getUpDirection(), 0.1);
 
         tempQ1.copy(this.camera.quaternion);
-        this.camera.lookAt(this.snake.positions[0]);
+        this.camera.lookAt(this.snake.getForwardDirection().multiplyScalar(5).add(this.snake.positions[0]));
         tempQ2.copy(this.camera.quaternion);
         this.camera.quaternion.copy(tempQ1);
         this.camera.quaternion.slerp(tempQ2, 0.1);
