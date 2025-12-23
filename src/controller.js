@@ -7,6 +7,8 @@ class Controller {
                 case "s": snake.turnUp(); break;
                 case "a": snake.turnLeft(); break;
                 case "d": snake.turnRight(); break;
+                case "q": snake.rollLeft(); break;
+                case "e": snake.rollRight(); break;
                 default: console.log(event.key); break;
             }
         });

@@ -82,6 +82,18 @@ class Snake {
             this.getLeftDirection(), Math.PI / 2
         ));
     }
+
+    rollLeft() {
+        this.orientation.premultiply(new THREE.Quaternion().setFromAxisAngle(
+            this.getForwardDirection(), - Math.PI / 2
+        ));
+    }
+
+    rollRight() {
+        this.orientation.premultiply(new THREE.Quaternion().setFromAxisAngle(
+            this.getForwardDirection(), Math.PI / 2
+        ));
+    }
 }
 
 export {Snake}
