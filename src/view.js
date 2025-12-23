@@ -11,8 +11,8 @@ class View {
     constructor(canvas, snake) {
         this.canvas = canvas;
         this.snake = snake;
-        this.canvas.width = this.canvas.parentElement.clientWidth;
-        this.canvas.height = this.canvas.parentElement.clientWidth;
+        this.canvas.width =  window.innerWidth;
+        this.canvas.height = window.innerHeight;
 
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
@@ -27,8 +27,8 @@ class View {
 
         this.camera.position.copy(this.snake.positions[0].clone().sub(this.snake.getForwardDirection()));
 
-        const light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
-        this.scene.add( light );
+        const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+        this.scene.add(light);
 
         this.ambientLight = new THREE.AmbientLight(0xFFFFFF, 1);
         this.scene.add(this.ambientLight);
@@ -39,7 +39,8 @@ class View {
 
         // Update canvas and renderer when window is resized
         window.onresize = () => {
-            this.canvas.width = this.canvas.parentElement.clientWidth;
+            this.canvas.width = window.innerWidth;
+            this.canvas.height = window.innerHeight;
             this.camera.aspect = this.canvas.width / this.canvas.height;
             this.camera.updateProjectionMatrix();
             this.renderer.setSize(this.canvas.width, this.canvas.height);
@@ -66,7 +67,7 @@ class View {
         this.camera.up.lerp(this.snake.getUpDirection(), 0.1);
 
         tempQ1.copy(this.camera.quaternion);
-        this.camera.lookAt(this.snake.getForwardDirection().multiplyScalar(5).add(this.snake.positions[0]));
+        this.camera.lookAt(this.snake.positions[0]);
         tempQ2.copy(this.camera.quaternion);
         this.camera.quaternion.copy(tempQ1);
         this.camera.quaternion.slerp(tempQ2, 0.1);
