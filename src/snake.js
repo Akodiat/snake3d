@@ -20,11 +20,15 @@ const defaultForward = new THREE.Vector3(0, 0, 1);
 const defaultLeft = new THREE.Vector3(1, 0, 0);
 const defaultUp = new THREE.Vector3(0, 1, 0);
 
-class Snake {
-    constructor(
-        startPosition=new THREE.Vector3(),
-        length=20,
-        orientation=new THREE.Quaternion()
+class Snake extends EventTarget{
+    constructor(startPosition, length, orientation) {
+        super();
+        this.init(startPosition, length, orientation)
+    }
+
+    init(startPosition = new THREE.Vector3(),
+        length = 1,
+        orientation = new THREE.Quaternion()
     ) {
         this.positions = [startPosition];
         this.length = length
@@ -45,6 +49,9 @@ class Snake {
         while (this.positions.length > this.length) {
             this.positions.pop();
         }
+
+        const event = new Event("step");
+        this.dispatchEvent(event);
     }
 
     getForwardDirection() {

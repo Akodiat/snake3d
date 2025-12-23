@@ -8,9 +8,10 @@ const tempQ2 = new THREE.Quaternion();
 
 class View {
 
-    constructor(canvas, snake) {
+    constructor(canvas, snake, food) {
         this.canvas = canvas;
         this.snake = snake;
+        this.food = food;
         this.canvas.width =  window.innerWidth;
         this.canvas.height = window.innerHeight;
 
@@ -33,10 +34,6 @@ class View {
         this.ambientLight = new THREE.AmbientLight(0xFFFFFF, 1);
         this.scene.add(this.ambientLight);
 
-        const axesHelper = new THREE.AxesHelper(1);
-        this.scene.add(axesHelper);
-
-
         // Update canvas and renderer when window is resized
         window.onresize = () => {
             this.canvas.width = window.innerWidth;
@@ -47,6 +44,7 @@ class View {
         };
 
         this.snakeView = new SnakeView(this.snake, this.scene);
+        this.foodView = new FoodView(this.food, this.scene);
 
         this.prevStepTime = 0;
 
@@ -73,7 +71,35 @@ class View {
         this.camera.quaternion.slerp(tempQ2, 0.1);
 
         this.snakeView.update();
+        this.foodView.update();
         this.renderer.render(this.scene, this.camera);
+    }
+}
+
+class FoodView {
+    constructor(food, scene) {
+        this.food = food;
+        this.scene = scene;
+        this.cubes = [];
+
+        this.cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
+        this.cubeMaterial = new THREE.MeshStandardMaterial({color: 0x00ffff});
+    }
+
+    update() {
+        for (let i=0; i<this.food.positions.length; i++) {
+            if (this.cubes[i] === undefined) {
+                this.cubes[i] = new THREE.Mesh(this.cubeGeometry, this.cubeMaterial);
+                this.scene.add(this.cubes[i]);
+            }
+            this.cubes[i].position.copy(this.food.positions[i]);
+        }
+
+        // Remove any extra cubes
+        while (this.cubes.length > this.food.positions.length) {
+            const extraCube = this.cubes.pop();
+            this.scene.remove(extraCube);
+        }
     }
 }
 
@@ -83,11 +109,11 @@ class SnakeView {
         this.scene = scene;
         this.cubes = [];
 
-        this.cubeGeometry = new THREE.BoxGeometry(0.8, 0.8, 0.8);
-        this.cubeMaterial = new THREE.MeshStandardMaterial({color: 0x00ff00});       
+        this.cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
+        this.cubeMaterial = new THREE.MeshStandardMaterial({color: 0x00ff00});
     }
-    
-    update() {        
+
+    update() {
         for (let i=0; i<this.snake.positions.length; i++) {
             if (this.cubes[i] === undefined) {
                 this.cubes[i] = new THREE.Mesh(this.cubeGeometry, this.cubeMaterial);
