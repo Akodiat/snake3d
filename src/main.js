@@ -4,15 +4,22 @@ import {View} from "./view.js";
 import {Controller} from "./controller.js";
 import {Food} from "./food.js";
 
-const canvas = document.getElementById("threeCanvas");
+document.getElementById("startButton").addEventListener("click", () => {
+    document.getElementById("startModal").open = false;
+    start();
+})
 
-const foodCount = 3;
-const box = new THREE.Vector3(10, 10, 10);
+function start() {
+    const canvas = document.getElementById("threeCanvas");
 
-const snake = new Snake();
+    const foodCount = 3;
+    const box = new THREE.Vector3(10, 10, 10);
 
-const food = new Food(foodCount, box);
+    const snake = new Snake();
 
-const view = new View(canvas, snake, food);
+    const food = new Food(foodCount, box);
 
-const controller = new Controller(snake, view, food);
+    const view = new View(canvas, snake, food);
+
+    const controller = new Controller(snake, view, food);
+}

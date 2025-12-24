@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>3d snake</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
     <style>
       body { margin: 0; height: 100%; width: 100%; position: fixed;}
     </style>
@@ -16,6 +17,21 @@
     </script>
   </head>
   <body>
+    <dialog open id="startModal">
+      <article>
+        <header>
+          <p>
+            <strong>God jul Elion</strong> önskar Joakim med familj
+          </p>
+        </header>
+        <p>
+          Här kommer ett spel jag har gjort till dig. Det är att betrakta som "early-access än så länge",
+          men tanken är att du kan komma med förslag på vad det skall innehålla och kanske till och med
+          hjälpa till att koda det. Spelet är en 3D-version av Snake, du styr med WASD och kan också snurra med Q och A.
+        </p>
+        <button id="startButton">Starta</button>
+      </article>
+    </dialog>
     <canvas id="threeCanvas"></canvas>
     <script type="module" src="src/main.js"></script>
   </body>
