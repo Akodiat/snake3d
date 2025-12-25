@@ -7,10 +7,11 @@ const tempQ2 = new THREE.Quaternion();
 
 class View {
 
-    constructor(canvas, snake, food) {
+    constructor(canvas, snake, food, obstacles) {
         this.canvas = canvas;
         this.snake = snake;
         this.food = food;
+        this.obstacles = obstacles;
         this.canvas.width =  window.innerWidth;
         this.canvas.height = window.innerHeight;
 
@@ -49,6 +50,7 @@ class View {
         const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
         const snakeMaterial = new THREE.MeshStandardMaterial({color: 0x00ff00});
         const foodMaterial  = new THREE.MeshStandardMaterial({color: 0x00ffff});
+        const obstacleMaterial  = new THREE.MeshStandardMaterial({color: 0xff0000});
 
         this.modelViews = [];
 
@@ -56,8 +58,9 @@ class View {
             const displacement = n.clone().multiply(this.snake.box);
             const snakeView = new ModelView(this.snake, cubeGeometry, snakeMaterial, displacement);
             const foodView = new ModelView(this.food, cubeGeometry, foodMaterial, displacement);
-            this.modelViews.push(snakeView, foodView);
-            this.scene.add(snakeView, foodView);
+            const obstacleView = new ModelView(this.obstacles, cubeGeometry, obstacleMaterial, displacement);
+            this.modelViews.push(snakeView, foodView, obstacleView);
+            this.scene.add(snakeView, foodView, obstacleView);
         }
 
         this.scene.fog = new THREE.Fog( 0xffffff, this.snake.box.x, this.snake.box.x * 1.5);

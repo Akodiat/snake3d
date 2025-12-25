@@ -4,7 +4,7 @@ function collides(p1, p2) {
 }
 
 class Controller {
-    constructor(snake, view, food) {
+    constructor(snake, view, food, obstacles) {
         document.addEventListener("keydown", event => {
             switch (event.key) {
                 case "w": snake.turnDown(); break;
@@ -23,7 +23,18 @@ class Controller {
             const ps = snake.positions;
             for (let i=1; i<ps.length; i++) {
                 if (collides(ps[0], ps[i])) {
-                    alert(`Game over! You got ${snake.length} points!`);
+                    alert(`Game over! You collided with yourself. You got ${snake.length} points!`);
+                    snake.reset();
+                    console.log("Collision");
+                    break;
+                }
+            }
+
+            // Check for obstacle collision
+            const os = obstacles.positions;
+            for (let i=0; i<os.length; i++) {
+                if (collides(ps[0], os[i])) {
+                    alert(`Game over! You collided with an obstacle. You got ${snake.length} points!`);
                     snake.reset();
                     console.log("Collision");
                     break;
@@ -41,6 +52,7 @@ class Controller {
                     break;
                 }
             }
+
         });
     }
 }
