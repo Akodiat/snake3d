@@ -15,7 +15,7 @@ function start() {
     const foodCount = 3;
     const box = new THREE.Vector3(10, 10, 10);
 
-    const snake = new Snake();
+    const snake = new Snake(box);
 
     const food = new Food(foodCount, box);
 

@@ -24,7 +24,7 @@ class Controller {
             for (let i=1; i<ps.length; i++) {
                 if (collides(ps[0], ps[i])) {
                     alert(`Game over! You got ${snake.length} points!`);
-                    snake.init() // Reset
+                    snake.reset();
                     console.log("Collision");
                     break;
                 }
@@ -32,7 +32,7 @@ class Controller {
 
             // Check for food collision
             const fs = food.positions;
-            for (let i=1; i<fs.length; i++) {
+            for (let i=0; i<fs.length; i++) {
                 if (collides(ps[0], fs[i])) {
                     snake.length++;
                     food.positions.splice(i,1); // Remove

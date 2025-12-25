@@ -11,6 +11,7 @@ class Food {
         for (let i=0; i<count; i++) {
             this.addFood();
         }
+        console.log(`Added  ${this.positions.length} food`);
     }
     addFood() {
         this.positions.push(

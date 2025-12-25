@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {mod} from './utils.js';
 
 const leftTurn = new THREE.Quaternion().setFromAxisAngle(
     new THREE.Vector3(0, 0, 1), Math.PI / 2
@@ -21,18 +22,31 @@ const defaultLeft = new THREE.Vector3(1, 0, 0);
 const defaultUp = new THREE.Vector3(0, 1, 0);
 
 class Snake extends EventTarget{
-    constructor(startPosition, length, orientation) {
+    constructor(box, startPosition, length, orientation) {
         super();
-        this.init(startPosition, length, orientation)
+        this.init(box, startPosition, length, orientation)
     }
 
-    init(startPosition = new THREE.Vector3(),
+    init(
+        box,
+        startPosition,
         length = 1,
         orientation = new THREE.Quaternion()
     ) {
+        this.box = box;
+        if (startPosition === undefined) {
+            startPosition = box.clone().divideScalar(2);
+            startPosition.x = Math.floor(startPosition.x);
+            startPosition.y = Math.floor(startPosition.y);
+            startPosition.z = Math.floor(startPosition.z);
+        }
         this.positions = [startPosition];
         this.length = length
         this.orientation = orientation;
+    }
+
+    reset() {
+        this.init(this.box)
     }
 
     step() {
@@ -41,6 +55,18 @@ class Snake extends EventTarget{
 
         // Calculate next position
         const nextPos = currentPos.clone().add(this.getForwardDirection());
+
+        // Apply periodic boundary conditions
+        nextPos.x = mod(nextPos.x, this.box.x);
+        nextPos.y = mod(nextPos.y, this.box.y);
+        nextPos.z = mod(nextPos.z, this.box.z);
+
+        // Round to integers (to avoid drift)
+        nextPos.x = Math.round(nextPos.x);
+        nextPos.y = Math.round(nextPos.y);
+        nextPos.z = Math.round(nextPos.z);
+
+        console.log(nextPos.toArray().join(","));
 
         // Add nextPos to the front of the list
         this.positions.splice(0, 0, nextPos);
