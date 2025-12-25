@@ -32,6 +32,29 @@
         <button id="startButton">Starta</button>
       </article>
     </dialog>
+    <dialog id="gameOver">
+      <article>
+        <header>
+          <p>
+            <strong>Game over!</strong>
+          </p>
+        </header>
+        <p id="gameOverText"></p>
+        <label>
+          Your name
+          <input
+            id="name"
+            placeholder="Your name"
+            autocomplete="given-name"
+          />
+        </label>
+        <article>
+          <h2>Top 5 games</h2>
+          <p id="leaderBoard"></p>
+        </article>
+        <button id="retryButton">Retry</button>
+      </article>
+    </dialog>
     <canvas id="threeCanvas"></canvas>
     <script type="module" src="src/main.js"></script>
   </body>

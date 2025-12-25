@@ -23,9 +23,7 @@ class Controller {
             const ps = snake.positions;
             for (let i=1; i<ps.length; i++) {
                 if (collides(ps[0], ps[i])) {
-                    alert(`Game over! You collided with yourself. You got ${snake.length} points!`);
-                    snake.reset();
-                    console.log("Collision");
+                    handleGameOver(`Game over! You collided with yourself. You got ${snake.length} points!`, snake);
                     break;
                 }
             }
@@ -34,9 +32,7 @@ class Controller {
             const os = obstacles.positions;
             for (let i=0; i<os.length; i++) {
                 if (collides(ps[0], os[i])) {
-                    alert(`Game over! You collided with an obstacle. You got ${snake.length} points!`);
-                    snake.reset();
-                    console.log("Collision");
+                    handleGameOver(`Game over! You collided with an obstacle. You got ${snake.length} points!`, snake);
                     break;
                 }
             }
@@ -55,6 +51,41 @@ class Controller {
 
         });
     }
+}
+
+function handleGameOver(text, snake) {
+    let leaderBoard = JSON.parse(localStorage.getItem("leaderBoard"));
+    if (leaderBoard == null) {
+        leaderBoard = [];
+    }
+
+    const points = snake.length;
+
+    let tmpLeaderBoard = leaderBoard.slice();
+    tmpLeaderBoard.push({
+        name: "[Current game]",
+        points: points
+    });
+    tmpLeaderBoard.sort((a,b)=>b.points - a.points);
+    tmpLeaderBoard = tmpLeaderBoard.slice(0, 5);
+
+    document.getElementById("leaderBoard").innerHTML = tmpLeaderBoard.map(i=>
+        `<p>${i.points}p: ${i.name}</p>`
+    ).join("");
+
+    document.getElementById("gameOverText").innerHTML = text;
+    document.getElementById("gameOver").open = true;
+    document.getElementById("retryButton").addEventListener("click", () => {
+        document.getElementById("gameOver").open = false;
+        const name = document.getElementById("name").value;
+        leaderBoard.push({
+            name: name,
+            points: points
+        });
+        localStorage.setItem("leaderBoard", JSON.stringify(leaderBoard));
+        snake.reset();
+    });
+    snake.reset();
 }
 
 export {Controller}
