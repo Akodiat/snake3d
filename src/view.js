@@ -63,7 +63,14 @@ class View {
             this.scene.add(snakeView, foodView, obstacleView);
         }
 
-        this.scene.fog = new THREE.Fog( 0xffffff, this.snake.box.x, this.snake.box.x * 1.5);
+        // Make fog colour match background (in both dark and light mode)
+        let bgColor = getComputedStyle(document.body).getPropertyValue('--pico-background-color');
+        bgColor = bgColor.replace(/\.\d+/g,"") // Pico.css colours have decimals??
+        this.scene.fog = new THREE.Fog(
+            new THREE.Color(bgColor),
+            this.snake.box.x,
+            this.snake.box.x * 1.5
+        );
 
         this.prevStepTime = 0;
 
