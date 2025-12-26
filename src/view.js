@@ -5,6 +5,8 @@ import {mooreNeighbourhood} from './utils.js';
 const tempQ1 = new THREE.Quaternion();
 const tempQ2 = new THREE.Quaternion();
 
+const origin = new THREE.Vector3();
+
 class View {
 
     constructor(canvas, snake, food, obstacles) {
@@ -26,8 +28,8 @@ class View {
             75, this.canvas.width / this.canvas.height, 0.1, 1000
         );
 
-        this.camera.position.copy(this.snake.positions[0].clone().sub(this.snake.getForwardDirection()));
-        this.camera.lookAt(this.snake.positions[0]);
+        this.camera.position.copy(origin.clone().sub(this.snake.getForwardDirection()));
+        this.camera.lookAt(origin);
 
         const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
         this.scene.add(light);
@@ -43,9 +45,6 @@ class View {
             this.camera.updateProjectionMatrix();
             this.renderer.setSize(this.canvas.width, this.canvas.height);
         };
-
-        //const axesHelper = new THREE.AxesHelper(this.snake.box.x);
-        //this.scene.add(axesHelper);
 
         const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
         const snakeMaterial = new THREE.MeshStandardMaterial({color: 0x00ff00});
@@ -83,27 +82,24 @@ class View {
             this.prevStepTime = time;
         };
 
-        const newCamPos = this.snake.getUpDirection().multiplyScalar(5).add(
-            this.snake.positions[0]
-        ).sub(
+        const newCamPos = this.snake.getUpDirection().multiplyScalar(5).sub(
             this.snake.getForwardDirection().multiplyScalar(5)
         );
 
         this.camera.position.lerp(newCamPos, 0.05);
         this.camera.up.lerp(this.snake.getUpDirection(), 0.1);
 
-        tempQ1.copy(this.camera.quaternion);
-        this.camera.lookAt(this.snake.positions[0]);
-        tempQ2.copy(this.camera.quaternion);
-        this.camera.quaternion.copy(tempQ1);
+        this.camera.lookAt(origin);
 
-        if(tempQ1.angleTo(tempQ2) < Math.PI / 2) {
-            this.camera.quaternion.slerp(tempQ2, 0.1);
-        } else {
-            this.camera.position.copy(newCamPos);
+        for (const v of this.modelViews) {
+            v.update();
+            const nextPos = this.snake.positions[0].clone().negate();
+            if (v.position.distanceToSquared(nextPos) > 2) {
+                v.position.copy(nextPos);
+                v.position.add(this.snake.getForwardDirection());
+            }
+            v.position.lerp(nextPos, 0.05);
         }
-
-        this.modelViews.forEach(v=>v.update());
         this.renderer.render(this.scene, this.camera);
     }
 }
