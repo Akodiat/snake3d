@@ -1,10 +1,11 @@
+import {TouchHandler} from "./touchHandler.js";
 
 function collides(p1, p2) {
     return p1.distanceToSquared(p2) < 0.1;
 }
 
 class Controller {
-    constructor(snake, view, food, obstacles) {
+    constructor(canvas, snake, view, food, obstacles) {
         document.addEventListener("keydown", event => {
             switch (event.key) {
                 case "w": snake.turnDown(); break;
@@ -23,6 +24,18 @@ class Controller {
 
                 default: console.log(event.key); break;
             }
+        });
+
+        const touchHandler = new TouchHandler(canvas);
+        touchHandler.addEventListener("swipeUp", () => snake.turnUp());
+        touchHandler.addEventListener("swipeDown", () => snake.turnDown());
+        touchHandler.addEventListener("swipeLeft", () => snake.turnLeft());
+        touchHandler.addEventListener("swipeRight", () => snake.turnRight());
+        touchHandler.addEventListener("tapRight", () => snake.rollLeft());
+        touchHandler.addEventListener("tapLeft", () => snake.rollRight());
+
+        document.addEventListener("touchstart", event => {
+
         });
 
         snake.addEventListener("step", () => {
