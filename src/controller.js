@@ -13,6 +13,14 @@ class Controller {
                 case "d": snake.turnRight(); break;
                 case "q": snake.rollLeft(); break;
                 case "e": snake.rollRight(); break;
+
+                case "ArrowUp": snake.turnDown(); break;
+                case "ArrowDown": snake.turnUp(); break;
+                case "ArrowLeft": snake.turnLeft(); break;
+                case "ArrowRight": snake.turnRight(); break;
+                case "PageUp": snake.rollLeft(); break;
+                case "PageDown": snake.rollRight(); break;
+
                 default: console.log(event.key); break;
             }
         });
