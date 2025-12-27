@@ -56,15 +56,15 @@ class Snake extends EventTarget{
         // Calculate next position
         const nextPos = currentPos.clone().add(this.getForwardDirection());
 
-        // Apply periodic boundary conditions
-        nextPos.x = mod(nextPos.x, this.box.x);
-        nextPos.y = mod(nextPos.y, this.box.y);
-        nextPos.z = mod(nextPos.z, this.box.z);
-
         // Round to integers (to avoid drift)
         nextPos.x = Math.round(nextPos.x);
         nextPos.y = Math.round(nextPos.y);
         nextPos.z = Math.round(nextPos.z);
+
+        // Apply periodic boundary conditions
+        nextPos.x = mod(nextPos.x, this.box.x);
+        nextPos.y = mod(nextPos.y, this.box.y);
+        nextPos.z = mod(nextPos.z, this.box.z);
 
         console.log(nextPos.toArray().join(","));
 
