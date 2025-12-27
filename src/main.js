@@ -26,5 +26,5 @@ function start() {
 
     const view = new View(canvas, snake, food, obstacles);
 
-    const controller = new Controller(canvas, snake, view, food, obstacles);
+    const controller = new Controller(canvas, snake, food, obstacles);
 }

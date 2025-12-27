@@ -1,22 +1,6 @@
 import * as THREE from 'three';
 import {mod} from './utils.js';
 
-const leftTurn = new THREE.Quaternion().setFromAxisAngle(
-    new THREE.Vector3(0, 0, 1), Math.PI / 2
-);
-
-const rightTurn = new THREE.Quaternion().setFromAxisAngle(
-    new THREE.Vector3(0, 0, 1), - Math.PI / 2
-);
-
-const upTurn = new THREE.Quaternion().setFromAxisAngle(
-    new THREE.Vector3(1, 0, 0), Math.PI / 2
-);
-
-const downTurn = new THREE.Quaternion().setFromAxisAngle(
-    new THREE.Vector3(1, 0, 0), - Math.PI / 2
-);
-
 const defaultForward = new THREE.Vector3(0, 0, 1);
 const defaultLeft = new THREE.Vector3(1, 0, 0);
 const defaultUp = new THREE.Vector3(0, 1, 0);

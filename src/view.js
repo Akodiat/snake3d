@@ -17,6 +17,9 @@ class View {
         this.canvas.width =  window.innerWidth;
         this.canvas.height = window.innerHeight;
 
+
+        // Setup scene
+
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
             canvas: this.canvas,
@@ -28,6 +31,8 @@ class View {
             75, this.canvas.width / this.canvas.height, 0.1, 1000
         );
 
+        // The camera should always look at the origin (we move the world to
+        // keep the snake head at the origin (see animate()))
         this.camera.position.copy(origin.clone().sub(this.snake.getForwardDirection()));
         this.camera.lookAt(origin);
 
@@ -46,13 +51,20 @@ class View {
             this.renderer.setSize(this.canvas.width, this.canvas.height);
         };
 
+        // Define geometries and materials here. Reuse them later.
+
         const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
         const snakeMaterial = new THREE.MeshStandardMaterial({color: 0x00ff00});
         const foodMaterial  = new THREE.MeshStandardMaterial({color: 0x00ffff});
         const obstacleMaterial  = new THREE.MeshStandardMaterial({color: 0xff0000});
 
-        this.modelViews = [];
 
+        // A single modelview for each type of item would be enought,
+        // but we want to see what is behind the other side of the
+        // periodic boundary, so we add 26 duplicates on each side
+        // of the box cube.
+
+        this.modelViews = [];
         for (const n of mooreNeighbourhood) {
             const displacement = n.clone().multiply(this.snake.box);
             const snakeView = new ModelView(this.snake, cubeGeometry, snakeMaterial, displacement);
@@ -77,23 +89,30 @@ class View {
     }
 
     animate(time) {
+        // Step every second
         if (time - this.prevStepTime > 1000) {
             this.snake.step();
             this.prevStepTime = time;
         };
 
+        // Position camera to look where the snake is headed
         const newCamPos = this.snake.getUpDirection().multiplyScalar(5).sub(
             this.snake.getForwardDirection().multiplyScalar(5)
         );
-
         this.camera.position.lerp(newCamPos, 0.05);
         this.camera.up.lerp(this.snake.getUpDirection(), 0.1);
-
         this.camera.lookAt(origin);
 
+        // Update all model views (including duplicates)
         for (const v of this.modelViews) {
             v.update();
+
+            // Move world to snake instead of snake to world
+            // (this makes camera movement easier across boundaries)
             const nextPos = this.snake.positions[0].clone().negate();
+
+            // If we pass across a boundary, first move to one step
+            // behind the opposite boundary to get smoother lerping.
             if (v.position.distanceToSquared(nextPos) > 2) {
                 v.position.copy(nextPos);
                 v.position.add(this.snake.getForwardDirection());
@@ -104,7 +123,7 @@ class View {
     }
 }
 
-class ModelView extends THREE.Group{
+class ModelView extends THREE.Group {
     constructor(model, geometry, material, displacement = new THREE.Vector3()) {
         super();
         this.model = model;
@@ -118,9 +137,11 @@ class ModelView extends THREE.Group{
     update() {
         for (let i=0; i<this.model.positions.length; i++) {
             if (this.cubes[i] === undefined) {
+                // Add more cubes as neccesary
                 this.cubes[i] = new THREE.Mesh(this.geometry, this.material);
                 this.add(this.cubes[i]);
             }
+            // Update positions
             this.cubes[i].position.copy(this.model.positions[i]);
             this.cubes[i].position.add(this.displacement);
         }

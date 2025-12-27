@@ -5,7 +5,8 @@ function collides(p1, p2) {
 }
 
 class Controller {
-    constructor(canvas, snake, view, food, obstacles) {
+    constructor(canvas, snake, food, obstacles) {
+
         document.addEventListener("keydown", event => {
             switch (event.key) {
                 case "w": snake.turnDown(); break;
