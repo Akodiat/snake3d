@@ -1,16 +1,16 @@
 import * as THREE from 'three';
-import {getRandomInt} from './utils.js';
+import {getRandomInt} from '../utils.js';
 
-class Obstacles {
+class Food {
     constructor(count, boundingBox) {
         this.boundingBox = boundingBox
         this.positions = [];
         for (let i=0; i<count; i++) {
-            this.addObstacle();
+            this.addFood();
         }
-        console.log(`Added  ${this.positions.length} obstacles`);
+        console.log(`Added  ${this.positions.length} food`);
     }
-    addObstacle() {
+    addFood() {
         this.positions.push(
             new THREE.Vector3(
                 getRandomInt(this.boundingBox.x),
@@ -21,4 +21,4 @@ class Obstacles {
     }
 }
 
-export {Obstacles}
+export {Food}

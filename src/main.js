@@ -1,9 +1,11 @@
 import * as THREE from 'three';
-import {Snake} from "./snake.js";
+
 import {View} from "./view.js";
 import {Controller} from "./controller.js";
-import {Food} from "./food.js";
-import { Obstacles } from './obstacles.js';
+
+import {Snake} from "./model/snake.js";
+import {Food} from "./model/food.js";
+import {Obstacles} from './model/obstacles.js';
 
 document.getElementById("startButton").addEventListener("click", () => {
     document.getElementById("startModal").open = false;
