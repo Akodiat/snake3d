@@ -62,6 +62,8 @@ class Snake extends EventTarget{
 
         const event = new Event("step");
         this.dispatchEvent(event);
+
+        console.log(this.orientation.length());
     }
 
     getForwardDirection() {
@@ -79,37 +81,37 @@ class Snake extends EventTarget{
     turnLeft() {
         this.orientation.premultiply(new THREE.Quaternion().setFromAxisAngle(
             this.getUpDirection(), Math.PI / 2
-        ));
+        )).normalize();
     }
 
     turnRight() {
         this.orientation.premultiply(new THREE.Quaternion().setFromAxisAngle(
             this.getUpDirection(), - Math.PI / 2
-        ));
+        )).normalize();
     }
 
     turnUp() {
         this.orientation.premultiply(new THREE.Quaternion().setFromAxisAngle(
             this.getLeftDirection(), - Math.PI / 2
-        ));
+        )).normalize();
     }
 
     turnDown() {
         this.orientation.premultiply(new THREE.Quaternion().setFromAxisAngle(
             this.getLeftDirection(), Math.PI / 2
-        ));
+        )).normalize();
     }
 
     rollLeft() {
         this.orientation.premultiply(new THREE.Quaternion().setFromAxisAngle(
             this.getForwardDirection(), - Math.PI / 2
-        ));
+        )).normalize();
     }
 
     rollRight() {
         this.orientation.premultiply(new THREE.Quaternion().setFromAxisAngle(
             this.getForwardDirection(), Math.PI / 2
-        ));
+        )).normalize();
     }
 }
 
