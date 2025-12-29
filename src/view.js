@@ -36,7 +36,7 @@ class View {
         this.camera.position.copy(origin.clone().sub(this.snake.getForwardDirection()));
         this.camera.lookAt(origin);
 
-        const pointLight = new THREE.PointLight(0xffffff, 100, 1);
+        const pointLight = new THREE.PointLight(0xffffff, 100);
         pointLight.position.set(10, 3, 2);
         this.scene.add(pointLight);
 
@@ -71,9 +71,9 @@ class View {
         this.modelViews = [];
         for (const n of mooreNeighbourhood) {
             const displacement = n.clone().multiply(this.snake.boundingBox);
-            const snakeView = new ModelView(this.snake, cubeGeometry, snakeMaterial, displacement);
-            const foodView = new ModelView(this.food, cubeGeometry, foodMaterial, displacement);
-            const obstacleView = new ModelView(this.obstacles, cubeGeometry, obstacleMaterial, displacement);
+            const snakeView = new ModelView(this.snake, cubeGeometry, snakeMaterial, displacement, 1.0);
+            const foodView = new ModelView(this.food, cubeGeometry, foodMaterial, displacement, 1.0);
+            const obstacleView = new ModelView(this.obstacles, cubeGeometry, obstacleMaterial, displacement, 0.9);
             this.modelViews.push(snakeView, foodView, obstacleView);
             this.scene.add(snakeView, foodView, obstacleView);
         }
@@ -128,7 +128,7 @@ class View {
 }
 
 class ModelView extends THREE.Group {
-    constructor(model, geometry, material, displacement = new THREE.Vector3()) {
+    constructor(model, geometry, material, displacement = new THREE.Vector3(), scaleFactor=1) {
         super();
         this.model = model;
         this.cubes = [];
@@ -136,6 +136,7 @@ class ModelView extends THREE.Group {
         this.geometry = geometry;
         this.material = material;
         this.displacement = displacement;
+        this.scaleFactor = scaleFactor;
     }
 
     update() {
@@ -143,6 +144,7 @@ class ModelView extends THREE.Group {
             if (this.cubes[i] === undefined) {
                 // Add more cubes as neccesary
                 this.cubes[i] = new THREE.Mesh(this.geometry, this.material);
+                this.cubes[i].scale.multiplyScalar(this.scaleFactor);
                 this.add(this.cubes[i]);
             }
             // Update positions
