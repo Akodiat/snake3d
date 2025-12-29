@@ -36,8 +36,12 @@ class View {
         this.camera.position.copy(origin.clone().sub(this.snake.getForwardDirection()));
         this.camera.lookAt(origin);
 
-        const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
-        this.scene.add(light);
+        const pointLight = new THREE.PointLight(0xffffff, 100, 1);
+        pointLight.position.set(10, 3, 2);
+        this.scene.add(pointLight);
+
+        const hemisphereLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+        this.scene.add(hemisphereLight);
 
         this.ambientLight = new THREE.AmbientLight(0xFFFFFF, 1);
         this.scene.add(this.ambientLight);
@@ -66,7 +70,7 @@ class View {
 
         this.modelViews = [];
         for (const n of mooreNeighbourhood) {
-            const displacement = n.clone().multiply(this.snake.box);
+            const displacement = n.clone().multiply(this.snake.boundingBox);
             const snakeView = new ModelView(this.snake, cubeGeometry, snakeMaterial, displacement);
             const foodView = new ModelView(this.food, cubeGeometry, foodMaterial, displacement);
             const obstacleView = new ModelView(this.obstacles, cubeGeometry, obstacleMaterial, displacement);
@@ -79,8 +83,8 @@ class View {
         bgColor = bgColor.replace(/\.\d+/g,"") // Pico.css colours have decimals??
         this.scene.fog = new THREE.Fog(
             new THREE.Color(bgColor),
-            this.snake.box.x,
-            this.snake.box.x * 1.5
+            this.snake.boundingBox.x,
+            this.snake.boundingBox.x * 1.5
         );
 
         this.prevStepTime = 0;

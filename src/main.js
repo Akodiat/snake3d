@@ -15,8 +15,8 @@ document.getElementById("startButton").addEventListener("click", () => {
 function start() {
     const canvas = document.getElementById("threeCanvas");
 
-    const foodCount = 3;
-    const obstacleCount = 10;
+    const foodCount = 1;
+    const obstacleCount = 0;
 
     const box = new THREE.Vector3(10, 10, 10);
 

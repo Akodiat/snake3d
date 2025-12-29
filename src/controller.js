@@ -1,4 +1,6 @@
 import {TouchHandler} from "./touchHandler.js";
+import {Vector3} from 'three';
+import {getRandomInt} from './utils.js';
 
 function collides(p1, p2) {
     return p1.distanceToSquared(p2) < 0.1;
@@ -64,8 +66,25 @@ class Controller {
             for (let i=0; i<fs.length; i++) {
                 if (collides(ps[0], fs[i])) {
                     snake.length++;
+                    obstacles.addObstacle(ps[0]);
                     food.positions.splice(i,1); // Remove
-                    food.addFood(); // Add on new location
+
+                    // Find a new random position
+                    // that is not already occupied
+                    let newPos;
+                    do {
+                        newPos = new Vector3(
+                            getRandomInt(snake.boundingBox.x),
+                            getRandomInt(snake.boundingBox.y),
+                            getRandomInt(snake.boundingBox.z)
+                        );
+                    } while ([
+                        ...obstacles.positions,
+                        ...snake.positions,
+                        ...food.positions
+                    ].some(p => collides(p, newPos)));
+
+                    food.addFood(newPos); // Add on new location
                     console.log("Food");
                     break;
                 }

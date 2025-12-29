@@ -12,14 +12,14 @@ class Snake extends EventTarget{
     }
 
     init(
-        box,
+        boundingBox,
         startPosition,
         length = 1,
         orientation = new THREE.Quaternion()
     ) {
-        this.box = box;
+        this.boundingBox = boundingBox;
         if (startPosition === undefined) {
-            startPosition = box.clone().divideScalar(2);
+            startPosition = boundingBox.clone().divideScalar(2);
             startPosition.x = Math.floor(startPosition.x);
             startPosition.y = Math.floor(startPosition.y);
             startPosition.z = Math.floor(startPosition.z);
@@ -30,7 +30,7 @@ class Snake extends EventTarget{
     }
 
     reset() {
-        this.init(this.box)
+        this.init(this.boundingBox)
     }
 
     step() {
@@ -46,9 +46,9 @@ class Snake extends EventTarget{
         nextPos.z = Math.round(nextPos.z);
 
         // Apply periodic boundary conditions
-        nextPos.x = mod(nextPos.x, this.box.x);
-        nextPos.y = mod(nextPos.y, this.box.y);
-        nextPos.z = mod(nextPos.z, this.box.z);
+        nextPos.x = mod(nextPos.x, this.boundingBox.x);
+        nextPos.y = mod(nextPos.y, this.boundingBox.y);
+        nextPos.z = mod(nextPos.z, this.boundingBox.z);
 
         console.log(nextPos.toArray().join(","));
 
