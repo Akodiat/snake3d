@@ -1,11 +1,5 @@
 import * as THREE from 'three';
-
-import {View} from "./view.js";
-import {Controller} from "./controller.js";
-
-import {Snake} from "./model/snake.js";
-import {Food} from "./model/food.js";
-import {Obstacles} from './model/obstacles.js';
+import {SnakeGame} from './snakeGame.js';
 
 document.getElementById("startButton").addEventListener("click", () => {
     document.getElementById("startModal").open = false;
@@ -20,13 +14,5 @@ function start() {
 
     const box = new THREE.Vector3(10, 10, 10);
 
-    const snake = new Snake(box);
-
-    const food = new Food(foodCount, box);
-
-    const obstacles = new Obstacles(obstacleCount, box);
-
-    const view = new View(canvas, snake, food, obstacles);
-
-    const controller = new Controller(canvas, snake, food, obstacles);
+    new SnakeGame(canvas, foodCount, obstacleCount, box);
 }
