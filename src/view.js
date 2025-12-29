@@ -97,6 +97,11 @@ class View {
         if (time - this.prevStepTime > 1000) {
             this.snake.step();
             this.prevStepTime = time;
+
+            // Update all model views (including duplicates)
+            for (const v of this.modelViews) {
+                v.update();
+            }
         };
 
         // Position camera to look where the snake is headed
@@ -107,10 +112,8 @@ class View {
         this.camera.up.lerp(this.snake.getUpDirection(), 0.1);
         this.camera.lookAt(origin);
 
-        // Update all model views (including duplicates)
+        // Lerp all model view positions (including duplicates)
         for (const v of this.modelViews) {
-            v.update();
-
             // Move world to snake instead of snake to world
             // (this makes camera movement easier across boundaries)
             const nextPos = this.snake.positions[0].clone().negate();
