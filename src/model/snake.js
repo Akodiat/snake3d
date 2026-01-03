@@ -6,16 +6,17 @@ const defaultLeft = new THREE.Vector3(1, 0, 0);
 const defaultUp = new THREE.Vector3(0, 1, 0);
 
 class Snake extends EventTarget{
-    constructor(box, startPosition, length, orientation) {
+    constructor(boundingBox, startPosition, length, orientation, paused=false) {
         super();
-        this.init(box, startPosition, length, orientation)
+        this.init(boundingBox, startPosition, length, orientation, paused)
     }
 
     init(
         boundingBox,
         startPosition,
         length = 1,
-        orientation = new THREE.Quaternion()
+        orientation = new THREE.Quaternion(),
+        paused = false
     ) {
         this.boundingBox = boundingBox;
         if (startPosition === undefined) {
@@ -27,13 +28,17 @@ class Snake extends EventTarget{
         this.positions = [startPosition];
         this.length = length
         this.orientation = orientation;
+        this.paused = paused
     }
 
     reset() {
-        this.init(this.boundingBox)
+        this.init(this.boundingBox);
     }
 
     step() {
+        if (this.paused) {
+            return;
+        }
         // Get first position in list
         const currentPos = this.positions[0];
 

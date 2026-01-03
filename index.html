@@ -6,6 +6,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
     <style>
       body { margin: 0; height: 100%; width: 100%; position: fixed;}
+      #qrcode {
+          background: white;
+          padding: 10px;
+          width: fit-content;
+      }
     </style>
     <script type="importmap">
     {
@@ -29,7 +34,40 @@
           men tanken är att du kan komma med förslag på vad det skall innehålla och kanske till och med
           hjälpa till att koda det. Spelet är en 3D-version av Snake, du styr med WASD och kan också snurra med Q och A.
         </p>
-        <button id="startButton">Starta</button>
+        <button id="startButton">Start</button>
+        <button class="secondary" id="startMultiPlayerButton">Start multiplayer</button>
+      </article>
+    </dialog>
+    <dialog id="multiplayerClient">
+      <article>
+        <header>
+          <p>
+            <strong>Multiplayer client</strong>
+          </p>
+        </header>
+        <p>
+          <label>
+          Player name
+          <input
+            id="multiplayerName"
+            placeholder="Player name"
+            autocomplete="given-name"
+          />
+        </label>
+        </p>
+        <button id="multiplayerClientConnectButton">Connect</button>
+      </article>
+    </dialog>
+    <dialog id="multiplayerHost">
+      <article>
+        <header>
+          <p>
+            <strong>Multiplayer host</strong>
+          </p>
+        </header>
+        <p id="multiplayerStatus"></p>
+        <p id="qrcode"></p>
+        <button hidden id="multiplayerHostStartButton">Start</button>
       </article>
     </dialog>
     <dialog id="gameOver">
@@ -56,6 +94,9 @@
       </article>
     </dialog>
     <canvas id="threeCanvas"></canvas>
+
+    <script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js"></script>
+        <script src=" https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script type="module" src="src/main.js"></script>
   </body>
 </html

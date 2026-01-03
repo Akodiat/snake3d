@@ -40,4 +40,8 @@ function getRandomInt(maxVal) {
   return Math.floor(Math.random() * maxVal);
 }
 
-export {mod, mooreNeighbourhood, getRandomInt};
+function collides(p1, p2) {
+    return p1.distanceToSquared(p2) < 0.1;
+}
+
+export {mod, mooreNeighbourhood, getRandomInt, collides};

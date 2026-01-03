@@ -17,7 +17,6 @@ class View {
         this.canvas.width =  window.innerWidth;
         this.canvas.height = window.innerHeight;
 
-
         // Setup scene
 
         this.renderer = new THREE.WebGLRenderer({
@@ -57,11 +56,11 @@ class View {
 
         // Define geometries and materials here. Reuse them later.
 
-        const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
-        const snakeMaterial = new THREE.MeshStandardMaterial({color: 0x00ff00});
-        const foodMaterial  = new THREE.MeshStandardMaterial({color: 0x00ffff});
-        const obstacleMaterial  = new THREE.MeshStandardMaterial({color: 0xff0000});
-
+        this.cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
+        this.sphereGeometry = new THREE.IcosahedronGeometry(0.5, 1);
+        this.snakeMaterial = new THREE.MeshStandardMaterial({color: 0x00ff00});
+        this.foodMaterial  = new THREE.MeshStandardMaterial({color: 0xffd700, roughness: 0.2, metalness: 0, flatShading: true});
+        this.obstacleMaterial  = new THREE.MeshStandardMaterial({color: 0xff0000});
 
         // A single modelview for each type of item would be enought,
         // but we want to see what is behind the other side of the
@@ -71,9 +70,9 @@ class View {
         this.modelViews = [];
         for (const n of mooreNeighbourhood) {
             const displacement = n.clone().multiply(this.snake.boundingBox);
-            const snakeView = new ModelView(this.snake, cubeGeometry, snakeMaterial, displacement, 1.0);
-            const foodView = new ModelView(this.food, cubeGeometry, foodMaterial, displacement, 1.0);
-            const obstacleView = new ModelView(this.obstacles, cubeGeometry, obstacleMaterial, displacement, 0.9);
+            const snakeView = new ModelView(this.snake, this.cubeGeometry, this.snakeMaterial, displacement);
+            const foodView = new ModelView(this.food, this.sphereGeometry, this.foodMaterial, displacement);
+            const obstacleView = new ModelView(this.obstacles, this.cubeGeometry, this.obstacleMaterial, displacement, 0.9);
             this.modelViews.push(snakeView, foodView, obstacleView);
             this.scene.add(snakeView, foodView, obstacleView);
         }
@@ -163,4 +162,4 @@ class ModelView extends THREE.Group {
     }
 }
 
-export {View}
+export {View, ModelView}
